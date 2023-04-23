@@ -2,6 +2,13 @@ import bcrypt from 'bcrypt'
 import jwt from'jsonwebtoken'
 import {v4 as uuidv4} from 'uuid'
 import UserModel from "../models/UserModel.js";
+
+import dotenv from 'dotenv';
+dotenv.config();
+
+const connectionString = process.env.MONGO_CONNECT;
+const jwtSecretKey = process.env.JWT_SECRET_KEY;
+
 export const register = async (req,res) => {
     try {
         const password = req.body.password
@@ -21,7 +28,7 @@ export const register = async (req,res) => {
         const token = jwt.sign({
                 _id: user._id,
             },
-            'tasksManagement',
+            process.env.JWT_SECRET_KEY,
             {
                 expiresIn: '1000d',
             }
@@ -60,7 +67,7 @@ export const login = async(req,res) => {
             {
                 _id: user._id,
             },
-            'tasksManagement',
+            process.env.JWT_SECRET_KEY,
             {
                 expiresIn: '1000d'
             }
@@ -80,7 +87,7 @@ export const login = async(req,res) => {
 export const getOne = async (req,res) => {
     try{
         const token = req.params.token
-        const decoded = jwt.verify(token, 'tasksManagement')
+        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
 
         const user = await UserModel.findOne({_id: decoded})
 
@@ -98,7 +105,7 @@ export const getOne = async (req,res) => {
 export const createTask = async (req, res) => {
     try {
         const userToken = req.params.token;
-        const decoded = jwt.verify(userToken, 'tasksManagement')
+        const decoded = jwt.verify(userToken, process.env.JWT_SECRET_KEY)
         const newTask = {
             id: uuidv4(),
             task: req.body.task,
@@ -131,7 +138,7 @@ export const removeTask = async (req, res) => {
     try {
         const taskId = req.params.taskId;
         const token = req.params.token
-        const decoded = jwt.verify(token, 'tasksManagement')
+        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
 
         const user = await UserModel.findOne({_id: decoded})
         const userId = user._id
@@ -171,7 +178,7 @@ export const updateTask = async (req, res) => {
     try {
         const taskId = req.params.taskId;
         const token = req.params.token
-        const decoded = jwt.verify(token, 'tasksManagement')
+        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
 
         const user = await UserModel.findOne({_id: decoded})
         const userId = user._id

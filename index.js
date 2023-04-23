@@ -8,8 +8,14 @@ import {registerValidation, loginValidation, taskValidation} from "./validation/
 import handleValidationsError from "./validation/handleValidationsError.js";
 import {getOne, updateTask} from "./controllers/UserController.js";
 
+import dotenv from 'dotenv';
+dotenv.config();
+
+const connectionString = process.env.MONGO_CONNECT;
+const jwtSecretKey = process.env.JWT_SECRET_KEY;
+
 mongoose
-    .connect('mongodb+srv://zeexample42:vladvador08@task.odoq9p9.mongodb.net/?retryWrites=true&w=majority')
+    .connect(process.env.MONGO_CONNECT)
     .then(() => {console.log('DB ok')})
     .catch((err) => {console.log('DB error', err)})
 
