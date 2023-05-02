@@ -21,7 +21,7 @@ export const register = async (req,res) => {
             fullName: req.body.fullName,
             email: req.body.email,
             avatarUrl: req.file.path,
-            tasks: [{"id": "create-task", "task": "create task", "priority": "high", "done": false}],
+            tasks: req.body.tasks,
             passwordHash: passHash,
         })
 
