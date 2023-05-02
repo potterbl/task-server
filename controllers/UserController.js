@@ -9,8 +9,10 @@ dotenv.config();
 const connectionString = process.env.MONGO_CONNECT;
 const jwtSecretKey = process.env.JWT_SECRET_KEY;
 
+
 export const register = async (req,res) => {
     try {
+        console.log(res)
         const password = req.body.password
         const salt = await bcrypt.genSalt(10)
         const passHash = await bcrypt.hash(password, salt)
@@ -18,8 +20,8 @@ export const register = async (req,res) => {
         const doc = new UserModel({
             fullName: req.body.fullName,
             email: req.body.email,
-            avatarUrl: req.body.avatarUrl,
-            tasks: req.body.tasks,
+            avatarUrl: req.file.path,
+            tasks: [{"id": "create-task", "task": "create task", "priority": "high", "done": false}],
             passwordHash: passHash,
         })
 
@@ -87,7 +89,7 @@ export const login = async(req,res) => {
 export const getOne = async (req,res) => {
     try{
         const token = req.params.token
-        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
+        const decoded = jwt.verify(token,process.env.JWT_SECRET_KEY)
 
         const user = await UserModel.findOne({_id: decoded})
 

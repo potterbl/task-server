@@ -1,10 +1,10 @@
 import {body} from 'express-validator'
 
 export const registerValidation = [
-    body('email').isEmail(),
-    body('password').isLength({min: 6}),
+    body('email').isString(),
+    body('password').isLength({min: 6}).isString(),
     body('avatarUrl').optional().isURL(),
-    body('tasks').optional().isArray(),
+    body('tasks').optional(),
 ]
 
 export const loginValidation = [
